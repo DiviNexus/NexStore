@@ -1,5 +1,9 @@
 # NexStore 🛒
 
+![Made with MERN](https://img.shields.io/badge/Made%20with-MERN-blue?style=for-the-badge&logo=mongodb&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=for-the-badge)
+
 An e-commerce web application built with the **MERN stack** (MongoDB, Express.js, React, Node.js). NexStore provides a seamless shopping experience with secure authentication, product management, and a modern UI.
 
 ---
