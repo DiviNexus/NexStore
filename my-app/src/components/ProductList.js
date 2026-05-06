@@ -13,15 +13,21 @@ const ProductList = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Products</h2>
-      <ul>
+    <div className="container mt-4">
+      <h2 className="mb-4">Products</h2>
+      <div className="row">
         {products.map((product) => (
-          <li key={product._id}>
-            {product.name} - ₹{product.price}
-          </li>
+          <div key={product._id} className="col-md-4 mb-3">
+            <div className="card h-100">
+              <div className="card-body">
+                <h5 className="card-title">{product.name}</h5>
+                <p className="card-text">₹{product.price}</p>
+                <p className="card-text">{product.description}</p>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
