@@ -20,6 +20,11 @@ const ProductDetails = () => {
 
   if (!product) return <p>Loading...</p>;
 
+  const handleAddToCart = () => {
+    // For now, just log to console — later we’ll connect to Cart state
+    console.log(`Added ${product.name} to cart`);
+  };
+
   return (
     <div className="container mt-4">
       <div className="card shadow-sm">
@@ -34,6 +39,12 @@ const ProductDetails = () => {
               className="img-fluid mt-3 rounded"
             />
           )}
+          <button
+            className="btn btn-primary mt-3"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
