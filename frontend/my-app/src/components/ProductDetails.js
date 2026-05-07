@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -5,6 +7,7 @@ import axios from "axios";
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -41,7 +44,7 @@ const ProductDetails = () => {
           )}
           <button
             className="btn btn-primary mt-3"
-            onClick={handleAddToCart}
+            onClick={() => addToCart(product)}
           >
             Add to Cart
           </button>

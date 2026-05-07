@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems } = useContext(CartContext);
 
   if (cartItems.length === 0) {
     return <p>Your cart is empty</p>;
