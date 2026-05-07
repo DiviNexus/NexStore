@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
@@ -8,6 +9,9 @@ dotenv.config();
 
 const app = express();
 app.use(express.json()); // allows JSON data in requests
+
+// Allow requests from React frontend
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
