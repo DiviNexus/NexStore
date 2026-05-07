@@ -8,9 +8,9 @@ connectDB();
 
 const products = [
   {
-    name: "High Performance Laptop",
+    name: "High Performance Gaming Laptop",
     price: 80000,
-    description: "Powerful laptop for coding and gaming",
+    description: "16GB RAM, 512GB SSD, Intel i7",
     brand: "Dell",
     category: "Electronics",
     countInStock: 10,
@@ -19,7 +19,7 @@ const products = [
   {
     name: "Smartphone Pro",
     price: 60000,
-    description: "Flagship smartphone with amazing camera",
+    description: "Flagship smartphone with amazing camera, 128GB storage, AMOLED display",
     brand: "Samsung",
     category: "Electronics",
     countInStock: 15,
@@ -28,7 +28,7 @@ const products = [
   {
     name: "Wireless Headphones",
     price: 1500,
-    description: "Noise-cancelling over-ear headphones",
+    description: "Noise-cancelling over-ear headphones, 30hr battery",
     brand: "Sony",
     category: "Audio",
     countInStock: 25,
