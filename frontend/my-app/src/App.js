@@ -4,6 +4,7 @@ import ProductDetails from "./components/ProductDetails";
 import Cart from "./components/Cart";
 import { CartProvider } from "./context/CartContext";
 import Checkout from "./pages/Checkout";
+import OrderDetails from "./pages/OrderDetails";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order/:id" element={<OrderDetails />} />
         </Routes>
       </Router>
     </CartProvider>
