@@ -30,6 +30,13 @@ const orderSchema = mongoose.Schema(
     paidAt: {
       type: Date,
     },
+    isDelivered: { 
+      type: Boolean, 
+      default: false 
+    },
+    deliveredAt: {
+      type: Date
+    },
   },
   { timestamps: true }
 );
