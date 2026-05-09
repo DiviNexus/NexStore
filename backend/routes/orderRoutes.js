@@ -34,6 +34,25 @@ router.get(
   })
 );
 
+// ✅ NEW ROUTE: Get order by ID
+// @desc    Get single order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+router.get(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id).populate("user", "id name email");
+
+    if (order) {
+      res.json(order);
+    } else {
+      res.status(404);
+      throw new Error("Order not found");
+    }
+  })
+);
+
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
