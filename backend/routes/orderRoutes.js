@@ -5,6 +5,23 @@ import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// @desc    Get all orders (admin only)
+// @route   GET /api/orders
+// @access  Private/Admin
+router.get(
+  "/",
+  protect,
+  asyncHandler(async (req, res) => {
+    if (!req.user.isAdmin) {
+      res.status(401);
+      throw new Error("Not authorized as admin");
+    }
+
+    const orders = await Order.find({}).populate("user", "id name email");
+    res.json(orders);
+  })
+);
+
 // @desc    Get logged-in user's orders
 // @route   GET /api/orders/myorders
 // @access  Private
@@ -51,16 +68,22 @@ router.put(
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
 
-    if (order) {
-      order.isPaid = true;
-      order.paidAt = Date.now();
-
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
+    if (!order) {
       res.status(404);
       throw new Error("Order not found");
     }
+
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.email_address,
+    };
+
+    const updatedOrder = await order.save();
+    res.json({ message: "Order marked as paid", order: updatedOrder });
   })
 );
 
@@ -78,16 +101,16 @@ router.put(
 
     const order = await Order.findById(req.params.id);
 
-    if (order) {
-      order.isDelivered = true;
-      order.deliveredAt = Date.now();
-
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
+    if (!order) {
       res.status(404);
       throw new Error("Order not found");
     }
+
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+    res.json({ message: "Order marked as delivered", order: updatedOrder });
   })
 );
 

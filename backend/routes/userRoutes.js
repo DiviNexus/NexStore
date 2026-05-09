@@ -6,6 +6,15 @@ import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Helper: Generate JWT
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email: user.email, isAdmin: user.isAdmin },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+};
+
 // Signup route
 router.post("/signup", async (req, res) => {
   try {
@@ -22,40 +31,49 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create new user with hashed password
-    const user = new User({ name, email, password: hashedPassword, isAdmin: true });
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      isAdmin: false   // ✅ normal users by default
+    });
+
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully", user });
+    res.status(201).json({
+      message: "User registered successfully",
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user),
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
 
-// Login Route
+// Login route
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // Find User
     const user = await User.findOne({ email });
-    if(!user) {
+    if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
     // Compare Password
     const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch){
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    console.log("JWT_SECRET:", process.env.JWT_SECRET);
-    // Generate JWT Token
-    const token = jwt.sign(
-      { id: user._id, email: user.email, isAdmin: user.isAdmin },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
 
-    res.json({ messae: "Login successful", token });
+    // Generate JWT Token
+    const token = generateToken(user);
+
+    res.json({ message: "Login successful", token });
   } catch (error) {
     console.error(error); // log the actual error in terminal
     res.status(500).json({ message: "Server error" });
@@ -65,13 +83,56 @@ router.post("/login", async (req, res) => {
 // Protected route
 router.get("/profile", protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password"); // exclude password
+    const user = await User.findById(req.user._id).select("-password"); // exclude password
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete user (admin only)
+router.delete("/:id", protect, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(401).json({ message: "Not authorized as admin" });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await user.deleteOne();
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Promote user to admin (admin only)
+router.put("/:id/make-admin", protect, async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(401).json({ message: "Not authorized as admin" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isAdmin = true;
+    await user.save();
+
+    res.json({ message: "User promoted to admin", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
