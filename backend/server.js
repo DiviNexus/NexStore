@@ -24,14 +24,21 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+// Test Route
+app.post("/ping", (req, res) => {
+  res.json({ message: "pong" });
+});
+
+
+// Order Routes
+app.use("/api/orders", orderRoutes);
+
 // User routes
 app.use("/api/users", userRoutes);
 
 // Product Routes
 app.use("/api/products", productRoutes);
 
-// Order Routes
-app.use("/api/orders", orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
