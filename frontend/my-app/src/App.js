@@ -7,6 +7,7 @@ import Checkout from "./pages/Checkout";
 import OrderDetails from "./pages/OrderDetails";
 import UserOrders from "./pages/UserOrders";
 import AdminOrders from "./pages/AdminOrders";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Message from "../components/Message";
 
 const OrderDetails = () => {
   const { id } = useParams(); // order ID from URL
   const [order, setOrder] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Fetch order details
   useEffect(() => {
@@ -16,9 +19,9 @@ const OrderDetails = () => {
           },
         });
         setOrder(data);
-      } catch (error) {
-        console.error(error);
-        alert("Error fetching order");
+      } catch (err) {
+        console.error(err);
+        setError("Error fetching order details");
       }
     };
 
@@ -43,9 +46,11 @@ const OrderDetails = () => {
         }
       );
       setOrder(data.order || data); // handle both response formats
-    } catch (error) {
-      console.error(error);
-      alert("Error marking order as paid");
+      setSuccess("Order marked as paid successfully!");
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Error marking order as paid");
     }
   };
 
@@ -62,9 +67,11 @@ const OrderDetails = () => {
         }
       );
       setOrder(data.order || data);
-    } catch (error) {
-      console.error(error);
-      alert("Error marking order as delivered");
+      setSuccess("Order marked as delivered successfully!");
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Error marking order as delivered");
     }
   };
 
@@ -72,21 +79,37 @@ const OrderDetails = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Order Details</h2>
+      <h2 className="mb-3">Order Details</h2>
+
+      {/* Show error or success messages */}
+      {error && <Message type="danger">{error}</Message>}
+      {success && <Message type="success">{success}</Message>}
+
       <p><strong>ID:</strong> {order._id}</p>
       <p><strong>Total:</strong> ₹{order.totalPrice}</p>
       <p>
         <strong>Status:</strong>{" "}
-        {order.isPaid ? "Paid" : "Not Paid"} |{" "}
-        {order.isDelivered ? "Delivered" : "Not Delivered"}
+        {order.isPaid ? (
+          <span className="badge bg-primary">Paid</span>
+        ) : (
+          <span className="badge bg-secondary">Not Paid</span>
+        )}{" "}
+        |{" "}
+        {order.isDelivered ? (
+          <span className="badge bg-success">Delivered</span>
+        ) : (
+          <span className="badge bg-warning text-dark">Not Delivered</span>
+        )}
       </p>
 
       <h4>Items:</h4>
-      {order.orderItems.map((item) => (
-        <div key={item._id}>
-          {item.name} - ₹{item.price} x {item.quantity}
-        </div>
-      ))}
+      <ul className="list-group mb-3">
+        {order.orderItems.map((item) => (
+          <li key={item._id} className="list-group-item">
+            {item.name} - ₹{item.price} x {item.quantity}
+          </li>
+        ))}
+      </ul>
 
       {/* Show Pay button if not paid */}
       {!order.isPaid && (
