@@ -5,6 +5,7 @@ import Cart from "./components/Cart";
 import { CartProvider } from "./context/CartContext";
 import Checkout from "./pages/Checkout";
 import OrderDetails from "./pages/OrderDetails";
+import UserOrders from "./pages/UserOrders";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order/:id" element={<OrderDetails />} />
+          <Route path="/myorders" element={<UserOrders />} />
         </Routes>
       </Router>
     </CartProvider>

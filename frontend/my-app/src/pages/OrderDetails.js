@@ -6,6 +6,7 @@ const OrderDetails = () => {
   const { id } = useParams(); // order ID from URL
   const [order, setOrder] = useState(null);
 
+  // Fetch order details
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -24,6 +25,7 @@ const OrderDetails = () => {
     fetchOrder();
   }, [id]);
 
+  // Mark order as paid
   const markPaid = async () => {
     try {
       const { data } = await axios.put(
@@ -47,6 +49,7 @@ const OrderDetails = () => {
     }
   };
 
+  // Mark order as delivered
   const markDelivered = async () => {
     try {
       const { data } = await axios.put(
@@ -72,7 +75,11 @@ const OrderDetails = () => {
       <h2>Order Details</h2>
       <p><strong>ID:</strong> {order._id}</p>
       <p><strong>Total:</strong> ₹{order.totalPrice}</p>
-      <p><strong>Status:</strong> {order.isPaid ? "Paid" : "Not Paid"} | {order.isDelivered ? "Delivered" : "Not Delivered"}</p>
+      <p>
+        <strong>Status:</strong>{" "}
+        {order.isPaid ? "Paid" : "Not Paid"} |{" "}
+        {order.isDelivered ? "Delivered" : "Not Delivered"}
+      </p>
 
       <h4>Items:</h4>
       {order.orderItems.map((item) => (
@@ -81,12 +88,14 @@ const OrderDetails = () => {
         </div>
       ))}
 
+      {/* Show Pay button if not paid */}
       {!order.isPaid && (
         <button className="btn btn-success mt-3" onClick={markPaid}>
           Pay Now
         </button>
       )}
 
+      {/* Show Deliver button if paid but not delivered */}
       {order.isPaid && !order.isDelivered && (
         <button className="btn btn-primary mt-3" onClick={markDelivered}>
           Mark Delivered (Admin only)
