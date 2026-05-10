@@ -6,6 +6,7 @@ import { CartProvider } from "./context/CartContext";
 import Checkout from "./pages/Checkout";
 import OrderDetails from "./pages/OrderDetails";
 import UserOrders from "./pages/UserOrders";
+import AdminOrders from "./pages/AdminOrders";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/myorders" element={<UserOrders />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
         </Routes>
       </Router>
     </CartProvider>
